@@ -1,0 +1,21 @@
+# Todoer Configuration File
+
+# Application settings
+environment: development  # development, staging, production
+port: 8080
+
+# Database configuration
+database:
+  url: "postgres://todoer:password@localhost:5432/todoer?sslmode=disable"
+  # Or specify individual components:
+  # host: localhost
+  # port: 5432
+  # user: todoer
+  # password: password
+  # database: todoer
+  # sslmode: disable
+
+# Notification settings (for future use)
+# notifications:
+#   ntfy_url: https://ntfy.sh
+#   ntfy_topic: your-topic-name

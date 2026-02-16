@@ -243,8 +243,41 @@ go mod tidy
   - CI/CD setup
 
 ### Features to Add
+
+#### Notifications & Reminders (Priority - In Progress)
+- [ ] Todo status field (not_started, in_progress, completed)
+  - Not started = eligible for nagging
+  - In progress = pause nagging until completed or reverted
+  - Completed = stop all nagging
+- [ ] NTFY integration for push notifications
+  - Use ntfy.sh public service (self-hosting later)
+  - Send one notification per todo (no batching for now)
+- [ ] Nagging configuration (per todo):
+  - [ ] Start nagging at due date
+  - [ ] Configurable nag interval (default: 10 minutes)
+  - [ ] Configurable nag duration (total time to keep nagging)
+  - [ ] Stop nagging when status changes to in_progress or completed
+- [ ] Database schema updates:
+  - `status` field (not_started, in_progress, completed)
+  - `nag_enabled` boolean
+  - `nag_interval` integer (minutes between nags)
+  - `nag_duration` integer (total minutes to nag)
+  - `last_nagged_at` timestamp
+- [ ] Background worker command (`todoer worker`)
+  - Continuous process checking for todos needing nags
+  - Send notifications via ntfy
+  - Update last_nagged_at timestamps
+- [ ] UI updates for nag configuration in todo form
+
+#### User System
 - [ ] User authentication (sign in/sign up)
 - [ ] User-specific todos and categories (multi-user support)
+- [ ] User preferences/settings (requires auth first):
+  - [ ] Quiet hours for notifications (e.g., 10pm-8am)
+  - [ ] Default nag interval preference
+  - [ ] NTFY topic configuration
+
+#### Other Features
 - [ ] Inline editing for todo title
 - [ ] Search/filter todos by text
 - [ ] Sort todos (by date, priority, completion, manual drag-drop)
@@ -253,6 +286,7 @@ go mod tidy
 - [ ] Bulk operations (mark multiple as complete, delete, move category)
 - [ ] Subtasks / checklists within todos
 - [ ] File attachments
+- [ ] Notification batching (group multiple overdue todos - future optimization)
 
 ### UI/UX Improvements
 - [x] Better modal close behavior (Bootstrap modal API with HTMX events)

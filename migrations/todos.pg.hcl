@@ -63,6 +63,12 @@ table "todos" {
     default = false
   }
 
+  column "status" {
+    type    = text
+    null    = false
+    default = "not_started"
+  }
+
   column "priority" {
     type    = text
     null    = false
@@ -117,5 +123,9 @@ table "todos" {
 
   index "idx_completed" {
     columns = [column.completed]
+  }
+
+  index "idx_status" {
+    columns = [column.status]
   }
 }

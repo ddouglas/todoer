@@ -11,6 +11,14 @@ func main() {
 	app := &cli.App{
 		Name:  "todoer",
 		Usage: "A todo list application ADHD-friendly reminder",
+		Flags: []cli.Flag{
+			&cli.StringFlag{
+				Name:    "config",
+				Aliases: []string{"c"},
+				Usage:   "Load configuration from `FILE`",
+				EnvVars: []string{"TODOER_CONFIG"},
+			},
+		},
 		Commands: []*cli.Command{
 			serveCommand,
 		},

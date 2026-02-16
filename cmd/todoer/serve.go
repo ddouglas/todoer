@@ -29,12 +29,12 @@ func serve(cCtx *cli.Context) error {
 	logger := logrus.New()
 	logger.SetFormatter(&logrus.TextFormatter{})
 
-	err := LoadConfig()
+	err := LoadConfig(cCtx.String("config"))
 	if err != nil {
 		logger.WithError(err).Fatal("failed to load config")
 	}
 
-	pool, err := pgxpool.New(ctx, c.DatabaseURL)
+	pool, err := pgxpool.New(ctx, c.Database.URL)
 	if err != nil {
 		logger.WithError(err).Fatal("failed to open db connection")
 	}

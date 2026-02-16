@@ -1,28 +1,39 @@
 package types
 
 import (
+	"fmt"
+
 	_ "github.com/kelseyhightower/envconfig"
 )
 
 type Config struct {
-	Environment string `envconfig:"ENVIRONMENT" required:"true"`
-	Port        uint   `envconfig:"PORT" required:"true"`
+	Environment string `yaml:"environment" envconfig:"ENVIRONMENT"`
+	Port        uint   `yaml:"port" envconfig:"PORT"`
 
-	DatabaseURL string `envconfig:"DATABASE_URL" required:"true"`
+	Database DatabaseConfig `yaml:"database"`
 }
 
-// Page data structs for templates
-type HomePageData struct {
-	Todos           []*Todo
-	Categories      []*Category
-	SelectedFilter  string // "all", "today", "week", or category ID
-	ActiveCategory  *Category
-	User            *struct{} // Placeholder for future auth
+type DatabaseConfig struct {
+	URL      string `yaml:"url" envconfig:"DATABASE_URL"`
+	Host     string `yaml:"host" envconfig:"DB_HOST"`
+	Port     int    `yaml:"port" envconfig:"DB_PORT"`
+	User     string `yaml:"user" envconfig:"DB_USER"`
+	Password string `yaml:"password" envconfig:"DB_PASSWORD"`
+	Database string `yaml:"database" envconfig:"DB_NAME"`
+	SSLMode  string `yaml:"sslmode" envconfig:"DB_SSLMODE"`
 }
 
-type TodoDetailPageData struct {
-	Todo       *Todo
-	Categories []*Category
-	IsNew      bool
-	User       *struct{} // Placeholder for future auth
+// BuildDatabaseURL constructs connection string from components if URL not provided
+func (d *DatabaseConfig) BuildDatabaseURL() string {
+	if d.URL != "" {
+		return d.URL
+	}
+	return fmt.Sprintf(
+		"postgres://%s:%s@%s:%d/%s?sslmode=%s",
+		d.User,
+		d.Password,
+		d.Host,
+		d.Port,
+		d.Database,
+		d.SSLMode)
 }
