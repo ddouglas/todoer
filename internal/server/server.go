@@ -100,6 +100,12 @@ func (s *Service) buildRouter(r *flow.Mux) {
 	r.HandleFunc("/categories/:id", s.handlePutCategory, http.MethodPut)
 	r.HandleFunc("/categories/:id", s.handleDeleteCategory, http.MethodDelete)
 
+	// Nag Settings
+	r.HandleFunc("/todos/:id/nags", s.handleGetNagSettings, http.MethodGet)
+	r.HandleFunc("/todos/:id/nags", s.handlePostNagSettings, http.MethodPost)
+	r.HandleFunc("/todos/:id/nags", s.handlePutNagSettings, http.MethodPut)
+	r.HandleFunc("/todos/:id/nags", s.handleDeleteNagSettings, http.MethodDelete)
+
 }
 
 func (s *Service) loadTemplates() {

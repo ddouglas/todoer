@@ -24,10 +24,16 @@ func (s *Service) handlePostTodo(w http.ResponseWriter, r *http.Request) {
 	categoryID := r.FormValue("category_id")
 	dueDateStr := r.FormValue("due_date")
 	reminderStr := r.FormValue("reminder_at")
+	status := r.FormValue("status")
 
 	todo := &types.Todo{
 		Title:    title,
 		Priority: priority,
+	}
+
+	// Set status if provided, otherwise defaults to not_started in DB
+	if status != "" {
+		todo.Status = status
 	}
 
 	// Optional fields
@@ -105,11 +111,17 @@ func (s *Service) handlePutTodo(w http.ResponseWriter, r *http.Request) {
 	dueDateStr := r.FormValue("due_date")
 	reminderStr := r.FormValue("reminder_at")
 	completed := r.FormValue("completed") == "on"
+	status := r.FormValue("status")
 
 	todo := &types.Todo{
 		Title:     title,
 		Priority:  priority,
 		Completed: completed,
+	}
+
+	// Set status if provided
+	if status != "" {
+		todo.Status = status
 	}
 
 	// Optional fields
