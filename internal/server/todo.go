@@ -2,6 +2,7 @@ package server
 
 import (
 	"net/http"
+	"strconv"
 	"time"
 
 	"github.com/ddouglas/todoer/pkg/types"
@@ -61,6 +62,48 @@ func (s *Service) handlePostTodo(w http.ResponseWriter, r *http.Request) {
 		s.logger.WithError(err).Error("failed to create todo")
 		s.internalServerError(w)
 		return
+	}
+
+	// Handle nag settings if provided
+	nagEnabled := r.FormValue("nag_enabled") == "true"
+	if nagEnabled {
+		nagIntervalStr := r.FormValue("nag_interval")
+		nagDurationStr := r.FormValue("nag_duration")
+
+		nag := &types.NagSettings{
+			TodoID:  todo.ID,
+			Enabled: true,
+		}
+
+		// Parse interval (default 10)
+		if nagIntervalStr != "" {
+			interval, err := strconv.Atoi(nagIntervalStr)
+			if err == nil && interval > 0 {
+				nag.IntervalMinutes = interval
+			} else {
+				nag.IntervalMinutes = 10
+			}
+		} else {
+			nag.IntervalMinutes = 10
+		}
+
+		// Parse duration (default 60)
+		if nagDurationStr != "" {
+			duration, err := strconv.Atoi(nagDurationStr)
+			if err == nil && duration > 0 {
+				nag.DurationMinutes = duration
+			} else {
+				nag.DurationMinutes = 60
+			}
+		} else {
+			nag.DurationMinutes = 60
+		}
+
+		err = s.nags.CreateNag(ctx, nag)
+		if err != nil {
+			s.logger.WithError(err).Error("failed to create nag settings")
+			// Don't fail the whole request, just log the error
+		}
 	}
 
 	// Reload todo with category
@@ -149,6 +192,66 @@ func (s *Service) handlePutTodo(w http.ResponseWriter, r *http.Request) {
 		s.logger.WithError(err).Error("failed to update todo")
 		s.internalServerError(w)
 		return
+	}
+
+	// Handle nag settings if provided
+	nagEnabled := r.FormValue("nag_enabled") == "true"
+	
+	// Check if nag settings already exist for this todo
+	existingNag, err := s.nags.NagSettingsByTodoID(ctx, id)
+	
+	if nagEnabled {
+		nagIntervalStr := r.FormValue("nag_interval")
+		nagDurationStr := r.FormValue("nag_duration")
+
+		nag := &types.NagSettings{
+			TodoID:  id,
+			Enabled: true,
+		}
+
+		// Parse interval (default 10)
+		if nagIntervalStr != "" {
+			interval, err := strconv.Atoi(nagIntervalStr)
+			if err == nil && interval > 0 {
+				nag.IntervalMinutes = interval
+			} else {
+				nag.IntervalMinutes = 10
+			}
+		} else {
+			nag.IntervalMinutes = 10
+		}
+
+		// Parse duration (default 60)
+		if nagDurationStr != "" {
+			duration, err := strconv.Atoi(nagDurationStr)
+			if err == nil && duration > 0 {
+				nag.DurationMinutes = duration
+			} else {
+				nag.DurationMinutes = 60
+			}
+		} else {
+			nag.DurationMinutes = 60
+		}
+
+		// Update or create nag settings
+		if existingNag != nil {
+			nag.ID = existingNag.ID
+			err = s.nags.UpdateNag(ctx, existingNag.ID, nag)
+			if err != nil {
+				s.logger.WithError(err).Error("failed to update nag settings")
+			}
+		} else {
+			err = s.nags.CreateNag(ctx, nag)
+			if err != nil {
+				s.logger.WithError(err).Error("failed to create nag settings")
+			}
+		}
+	} else if existingNag != nil {
+		// Nag disabled but settings exist - delete them
+		err = s.nags.DeleteNag(ctx, id)
+		if err != nil {
+			s.logger.WithError(err).Error("failed to delete nag settings")
+		}
 	}
 
 	// Reload todo with category

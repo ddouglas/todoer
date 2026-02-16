@@ -181,6 +181,13 @@ func (s *Service) handleEditTodoModal(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	
+	// Load nag settings if they exist
+	nagSettings, err := s.nags.NagSettingsByTodoID(ctx, id)
+	if err == nil {
+		todo.NagSettings = nagSettings
+	}
+	// Ignore error if nag settings don't exist
+	
 	// Get categories for form
 	categories, err := s.categories.Categories(ctx)
 	if err != nil {
