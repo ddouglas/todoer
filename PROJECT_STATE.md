@@ -12,7 +12,7 @@ A Go + HTMX todo list application with Postgres backend.
 - **Query Builder:** Masterminds/squirrel
 - **Migrations:** Atlas (HCL schema-as-code)
 - **Logging:** logrus
-- **Frontend:** HTMX 2.0.8 + Pico CSS v2
+- **Frontend:** HTMX 2.0.8 + Bootstrap 5.3.2 + Bootstrap Icons 1.11.3
 - **Templates:** Go html/template (embedded FS)
 
 ## Project Structure
@@ -54,21 +54,19 @@ migrations/          # Atlas schema definitions
 - **Loading:** All templates parsed recursively at startup in `server.New()`
 
 ### Template Components
-- `layout.base` - HTML shell with flexbox layout (nav + sidebar + main)
-- `component.nav` - Navigation header
-- `component.sidebar` - Sidebar with filters and categories
-- `component.todo.form` - Quick add todo form (simple)
-- `component.todo.detail-form` - Full todo form with all metadata
-- `component.todo.list` - Todo list container
-- `component.todo.item` - Enhanced todo row with priority, category, due date
-- `component.todo.empty` - Empty state message
+- `component.nav` - Bootstrap navbar with brand and user menu
+- `component.sidebar` - Bootstrap sidebar with list groups for filters and categories
+- `component.todo.form` - Quick add todo form (hidden by default, using modal instead)
+- `component.todo.detail-form` - Full todo form with all metadata (Bootstrap form controls)
+- `component.todo.list` - Todo list container (flex column with gap)
+- `component.todo.item` - Enhanced Bootstrap card for todo with priority badges, category badges, due dates
+- `component.todo.empty` - Empty state with Bootstrap icon and styling
 - `component.todo.empty-oob` - Empty state with OOB swap (restore on delete)
 - `component.todo.empty-delete` - OOB delete command (remove on create)
-- `component.modal` - Modal wrapper for HTMX
-- `component.modal.todo-detail` - Todo detail modal content
-- `component.modal.category-form` - Category form modal
-- `page.home` - Home page with sidebar and filtered list
-- `page.todo-detail` - Dedicated todo detail/edit page
+- `component.modal.todo-detail` - Bootstrap modal wrapper for todo form with fade animation
+- `component.modal.category-form` - Bootstrap modal for category creation
+- `page.home` - Self-contained home page with Bootstrap grid layout (sidebar + main content)
+- `page.todo-detail` - Self-contained detail page with Bootstrap card layout
 
 ### Handlers
 - **Page data:** Typed structs per page (`HomePageData`, `TodoDetailPageData`)
@@ -79,19 +77,22 @@ migrations/          # Atlas schema definitions
 - **Content-Type:** Always set `text/html` for template responses
 
 ### UI Layout Architecture
-- **Flexbox layout:** Container with fixed nav, flexible sidebar + main content
-- **Sidebar:** 250px fixed width, filters + categories list
-- **Main content:** Flexible width, scrollable
-- **Responsive:** Sidebar and content adapt to screen size
-- **Modals:** HTMX-driven overlays for quick actions
+- **Bootstrap Grid:** Container-fluid with responsive column layout
+- **Navbar:** Bootstrap navbar-dark bg-primary, sticky at top
+- **Sidebar:** col-md-3 col-lg-2 with sticky positioning, list-group navigation
+- **Main content:** col-md-9 col-lg-10, light gray background (#f8f9fa)
+- **Cards:** Todo items as Bootstrap cards with shadow-sm and hover effects
+- **Responsive:** Mobile-first, sidebar collapses on small screens
+- **Modals:** Bootstrap modal components with fade animations and backdrop
 
 ### HTMX Patterns
 - **Create (simple):** POST `/todos` → append `component.todo.item` + OOB delete empty state
-- **Create (full):** POST `/todos` from detail form → redirect or close modal
+- **Create (modal):** POST `/todos` from modal → afterbegin swap to #todos-list, auto-close modal via hx-on::after-request
 - **Toggle:** PATCH `/todos/{id}` → swap `component.todo.item` in place
 - **Update:** PUT `/todos/{id}` → swap updated `component.todo.item`
-- **Delete:** DELETE `/todos/{id}` → remove row, restore empty state if last item
-- **Modals:** GET `/todos/{id}/modal` → load `component.modal.todo-detail` into modal container
+- **Delete:** DELETE `/todos/{id}` → remove todo-item div, restore empty state if last item
+- **Modals:** GET `/todos/{id}/modal` → load Bootstrap modal into #modal-container, auto-initialize
+- **Modal close:** Bootstrap modal API used (bootstrap.Modal.getInstance().hide())
 - **Filters:** GET `/?filter=today` → full page reload with filtered todos
 - **OOB swaps:** Used for empty state management (adding/removing)
 
@@ -117,10 +118,13 @@ migrations/          # Atlas schema definitions
 - ✅ Empty state management (shows/hides based on todo count)
 - ✅ Modal support via HTMX for quick add/edit
 - ✅ Dedicated detail pages for full todo editing
-- ✅ Responsive sidebar layout with Pico CSS
+- ✅ Responsive sidebar layout with Bootstrap 5
 - ✅ Category color coding and emoji icons
 - ✅ Database migrations with Atlas
 - ✅ Docker Compose for local Postgres
+- ✅ Professional UI with Bootstrap modals, cards, and icons
+- ✅ Fixed category comparison in templates (Category.ID vs CategoryID pointer)
+- ✅ Proper modal container targeting (#modal-container)
 
 ### Database Schema
 **Table:** `categories`
@@ -188,7 +192,9 @@ PORT=8080
 1. **HTMX OOB swaps:** Must wrap elements in a container div when using `hx-swap-oob` to include the outer element itself
 2. **Checkbox state:** Unchecked checkboxes send no value; checked sends `"on"`
 3. **Template hot reload:** Templates are embedded, so require app restart to see changes
-4. **Modal close:** Currently uses JavaScript + page reload; could be improved with HTMX events
+4. **Bootstrap + HTMX integration:** Bootstrap modals auto-initialized via JavaScript, cleaned up on hide
+5. **Template comparisons:** When comparing CategoryID (pointer) use Category.ID from joined object instead
+6. **Modal targets:** Ensure HTMX targets match container IDs (#modal-container not #modal-content)
 
 ## Development Commands
 
@@ -223,7 +229,10 @@ go mod tidy
 ## Next Steps / TODOs
 
 ### High Priority
-- [ ] Test redesigned UI and fix any bugs
+- [x] Test redesigned UI and fix any bugs
+- [x] Migrate from Pico CSS to Bootstrap 5
+- [x] Fix modal container targeting
+- [x] Fix category comparison in templates
 - [ ] Run migrations on fresh database
 - [ ] Verify all CRUD operations work with new schema
 - [ ] Add sample categories for demo
@@ -246,9 +255,9 @@ go mod tidy
 - [ ] File attachments
 
 ### UI/UX Improvements
-- [ ] Better modal close behavior (use HTMX events instead of reload)
+- [x] Better modal close behavior (Bootstrap modal API with HTMX events)
 - [ ] Loading states for HTMX requests
-- [ ] Toast notifications for actions (created, updated, deleted)
+- [ ] Toast notifications for actions (created, updated, deleted) - could use Bootstrap toasts
 - [ ] Undo delete (with toast notification)
 - [ ] Keyboard shortcuts (n for new, / for search, etc.)
 - [ ] Drag and drop reordering
@@ -353,7 +362,8 @@ s.templates.ExecuteTemplate(w, "component.name", item)
 
 ## Resources
 - [HTMX Documentation](https://htmx.org/docs/)
-- [Pico CSS](https://picocss.com/)
+- [Bootstrap 5.3](https://getbootstrap.com/docs/5.3/)
+- [Bootstrap Icons](https://icons.getbootstrap.com/)
 - [Flow Router](https://github.com/alexedwards/flow)
 - [Atlas CLI](https://atlasgo.io/)
 - [pgx](https://github.com/jackc/pgx)
