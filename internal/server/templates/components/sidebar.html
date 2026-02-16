@@ -1,65 +1,37 @@
 {{define "component.sidebar"}}
-<aside style="width: 250px; border-right: 1px solid var(--pico-muted-border-color); padding: 1rem; min-height: calc(100vh - 60px);">
-  <nav>
-    <ul style="list-style: none; padding: 0;">
-      <!-- Quick Filters -->
-      <li>
-        <a href="/?filter=all" class="{{if eq .SelectedFilter "all"}}active{{end}}" style="display: block; padding: 0.5rem; border-radius: 4px; text-decoration: none;">
-          📋 All Todos
-        </a>
-      </li>
-      <li>
-        <a href="/?filter=today" class="{{if eq .SelectedFilter "today"}}active{{end}}" style="display: block; padding: 0.5rem; border-radius: 4px; text-decoration: none;">
-          📅 Today
-        </a>
-      </li>
-      <li>
-        <a href="/?filter=week" class="{{if eq .SelectedFilter "week"}}active{{end}}" style="display: block; padding: 0.5rem; border-radius: 4px; text-decoration: none;">
-          📆 This Week
-        </a>
-      </li>
+<nav class="col-md-3 col-lg-2 d-md-block sidebar">
+  <div class="position-sticky pt-3">
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
+      <span>Quick Filters</span>
+    </h6>
+    <ul class="list-group list-group-flush">
+      <a href="/?filter=all" class="list-group-item list-group-item-action {{if eq .SelectedFilter "all"}}active{{end}}">
+        <i class="bi bi-list-check"></i> All Todos
+      </a>
+      <a href="/?filter=today" class="list-group-item list-group-item-action {{if eq .SelectedFilter "today"}}active{{end}}">
+        <i class="bi bi-calendar-check"></i> Today
+      </a>
+      <a href="/?filter=week" class="list-group-item list-group-item-action {{if eq .SelectedFilter "week"}}active{{end}}">
+        <i class="bi bi-calendar-week"></i> This Week
+      </a>
+    </ul>
 
-      <!-- Divider -->
-      <li style="margin: 1rem 0; border-bottom: 1px solid var(--pico-muted-border-color);"></li>
-
-      <!-- Categories Header -->
-      <li style="padding: 0.5rem; font-weight: bold; color: var(--pico-muted-color);">
-        Categories
-      </li>
-
-      <!-- Categories List -->
+    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted text-uppercase">
+      <span>Categories</span>
+    </h6>
+    <ul class="list-group list-group-flush">
       {{if .Categories}}
       {{range .Categories}}
-      <li>
-        <a href="/?filter=category&category={{.ID}}" class="{{if eq $.SelectedFilter .ID}}active{{end}}"
-          style="display: flex; align-items: center; padding: 0.5rem; border-radius: 4px; text-decoration: none;">
-          <span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: {{.Color}}; margin-right: 0.5rem;"></span>
-          {{if .Icon}}{{.Icon}} {{end}}{{.Name}}
-        </a>
-      </li>
+      <a href="/?filter=category&category={{.ID}}" class="list-group-item list-group-item-action d-flex align-items-center {{if eq $.SelectedFilter .ID}}active{{end}}">
+        <span class="badge rounded-circle me-2" style="background-color: {{.Color}}; width: 12px; height: 12px; padding: 0;"></span>
+        {{if .Icon}}<span class="me-1">{{.Icon}}</span>{{end}} {{.Name}}
+      </a>
       {{end}}
       {{end}}
-
-      <!-- Add Category Button -->
-      <li style="margin-top: 0.5rem;">
-        <a href="/categories/new" hx-get="/categories/new" hx-target="#modal-content" hx-swap="innerHTML"
-          style="display: block; padding: 0.5rem; border-radius: 4px; text-decoration: none; color: var(--pico-primary);">
-          ➕ New Category
-        </a>
-      </li>
+      <a href="/categories/new" hx-get="/categories/new" hx-target="#modal-container" hx-swap="innerHTML" class="list-group-item list-group-item-action text-primary">
+        <i class="bi bi-plus-circle"></i> New Category
+      </a>
     </ul>
-  </nav>
-</aside>
-
-<style>
-  aside a.active {
-    background-color: var(--pico-primary-background);
-    color: var(--pico-primary);
-    font-weight: 500;
-  }
-
-  aside a:hover {
-    background-color: var(--pico-secondary-background);
-  }
-</style>
+  </div>
+</nav>
 {{end}}

@@ -1,75 +1,77 @@
 {{define "component.todo.detail-form"}}
 <form {{if .IsNew}} hx-post="/todos" hx-target="#todos-list" hx-swap="afterbegin"
-  hx-on::after-request="if(event.detail.successful) { const modal = document.getElementById('todo-modal'); if(modal) modal.remove(); }" {{else}} hx-put="/todos/{{.Todo.ID}}"
-  hx-target="#todo-{{.Todo.ID}}" hx-swap="outerHTML" hx-on::after-request="if(event.detail.successful) { const modal = document.getElementById('todo-modal'); if(modal) modal.remove(); }" {{end}}
-  style="display: flex; flex-direction: column; gap: 1rem;">
+  hx-on::after-request="if(event.detail.successful) { const modal = bootstrap.Modal.getInstance(document.getElementById('todo-modal')); if(modal) modal.hide(); }" {{else}} hx-put="/todos/{{.Todo.ID}}"
+  hx-target="#todo-{{.Todo.ID}}" hx-swap="outerHTML"
+  hx-on::after-request="if(event.detail.successful) { const modal = bootstrap.Modal.getInstance(document.getElementById('todo-modal')); if(modal) modal.hide(); }" {{end}}>
 
   <!-- Title -->
-  <label>
-    Title
-    <input type="text" name="title" value="{{if .Todo}}{{.Todo.Title}}{{end}}" placeholder="What needs to be done?" required autofocus />
-  </label>
+  <div class="mb-3">
+    <label for="title" class="form-label">Title</label>
+    <input type="text" class="form-control" id="title" name="title" value="{{if .Todo}}{{.Todo.Title}}{{end}}" placeholder="What needs to be done?" required autofocus />
+  </div>
 
   <!-- Description -->
-  <label>
-    Description
-    <textarea name="description" rows="4" placeholder="Add more details...">{{if .Todo}}{{if .Todo.Description}}{{.Todo.Description}}{{end}}{{end}}</textarea>
-  </label>
+  <div class="mb-3">
+    <label for="description" class="form-label">Description</label>
+    <textarea class="form-control" id="description" name="description" rows="4" placeholder="Add more details...">{{if .Todo}}{{if .Todo.Description}}{{.Todo.Description}}{{end}}{{end}}</textarea>
+  </div>
 
   <!-- Category -->
-  <label>
-    Category
-    <select name="category_id">
+  <div class="mb-3">
+    <label for="category_id" class="form-label">Category</label>
+    <select class="form-select" id="category_id" name="category_id">
       <option value="">No Category</option>
       {{range .Categories}}
-      <option value="{{.ID}}" {{if $.Todo}}{{if $.Todo.CategoryID}}{{if eq $.Todo.CategoryID .ID}}selected{{end}}{{end}}{{end}}>
+      <option value="{{.ID}}" {{if $.Todo}}{{if $.Todo.Category}}{{if eq $.Todo.Category.ID .ID}}selected{{end}}{{end}}{{end}}>
         {{if .Icon}}{{.Icon}} {{end}}{{.Name}}
       </option>
       {{end}}
     </select>
-  </label>
+  </div>
 
   <!-- Priority & Due Date Row -->
-  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+  <div class="row">
     <!-- Priority -->
-    <label>
-      Priority
-      <select name="priority">
+    <div class="col-md-6 mb-3">
+      <label for="priority" class="form-label">Priority</label>
+      <select class="form-select" id="priority" name="priority">
         <option value="low" {{if .Todo}}{{if eq .Todo.Priority "low"}}selected{{end}}{{end}}>Low</option>
         <option value="medium" {{if .Todo}}{{if eq .Todo.Priority "medium"}}selected{{end}}{{end}}>Medium</option>
         <option value="high" {{if .Todo}}{{if eq .Todo.Priority "high"}}selected{{end}}{{end}}>High</option>
       </select>
-    </label>
+    </div>
 
     <!-- Due Date -->
-    <label>
-      Due Date
-      <input type="date" name="due_date" value="{{if .Todo}}{{if .Todo.DueDate}}{{.Todo.DueDate.Format "2006-01-02"}}{{end}}{{end}}" />
-    </label>
+    <div class="col-md-6 mb-3">
+      <label for="due_date" class="form-label">Due Date</label>
+      <input type="date" class="form-control" id="due_date" name="due_date" value="{{if .Todo}}{{if .Todo.DueDate}}{{.Todo.DueDate.Format "2006-01-02"}}{{end}}{{end}}" />
+    </div>
   </div>
 
   <!-- Reminder -->
-  <label>
-    Reminder
-    <input type="datetime-local" name="reminder_at" value="{{if .Todo}}{{if .Todo.ReminderAt}}{{.Todo.ReminderAt.Format "2006-01-02T15:04"}}{{end}}{{end}}" />
-  </label>
+  <div class="mb-3">
+    <label for="reminder_at" class="form-label">Reminder</label>
+    <input type="datetime-local" class="form-control" id="reminder_at" name="reminder_at" value="{{if .Todo}}{{if .Todo.ReminderAt}}{{.Todo.ReminderAt.Format "2006-01-02T15:04"}}{{end}}{{end}}" />
+  </div>
 
   <!-- Completed (only show for edit) -->
   {{if not .IsNew}}
-  <label>
-    <input type="checkbox" name="completed" {{if .Todo.Completed}}checked{{end}} />
-    Mark as completed
-  </label>
+  <div class="mb-3 form-check">
+    <input type="checkbox" class="form-check-input" id="completed" name="completed" {{if .Todo.Completed}}checked{{end}} />
+    <label class="form-check-label" for="completed">
+      Mark as completed
+    </label>
+  </div>
   {{end}}
 
   <!-- Actions -->
-  <div style="display: flex; gap: 1rem; justify-content: flex-end;">
-    <button type="button" onclick="const modal = document.getElementById('todo-modal'); if(modal) { modal.remove(); } else { window.history.back(); }" class="secondary">
+  <div class="d-flex gap-2 justify-content-end">
+    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
       Cancel
     </button>
-    <button type="submit">
-      {{if .IsNew}}Create Todo
-      {{else}}Save Changes{{end}}
+    <button type="submit" class="btn btn-primary">
+      {{if .IsNew}}<i class="bi bi-plus-lg"></i> Create Todo
+      {{else}}<i class="bi bi-save"></i> Save Changes{{end}}
     </button>
   </div>
 </form>

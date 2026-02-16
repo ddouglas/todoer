@@ -1,6 +1,10 @@
 {{define "component.todo.form"}}
-<form hx-post="/todos" hx-target="#todos-list" hx-swap="beforeend">
-  <input type="text" name="title" placeholder="Add a new todo..." required />
-  <button type="submit">Add</button>
+<form hx-post="/todos" hx-target="#todos-list" hx-swap="afterbegin" class="d-none">
+  <div class="input-group">
+    <input type="text" class="form-control" name="title" placeholder="Add a new todo..." required />
+    <button class="btn btn-primary" type="submit">
+      <i class="bi bi-plus-lg"></i> Add
+    </button>
+  </div>
 </form>
 {{end}}

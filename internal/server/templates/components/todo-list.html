@@ -1,7 +1,7 @@
 {{define "component.todo.list"}}
-<ul id="todos-list">
+<div id="todos-list" class="d-flex flex-column gap-2">
   {{range .Todos}}
   {{template "component.todo.item" .}}
   {{end}}
-</ul>
+</div>
 {{end}}

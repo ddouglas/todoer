@@ -1,50 +1,56 @@
 {{define "component.modal.category-form"}}
-<dialog id="modal" open>
-  <article style="max-width: 500px;">
-    <header>
-      <a href="#close" aria-label="Close" class="close" onclick="document.getElementById('modal').close(); window.location.reload(); return false;">
-      </a>
-      <h3>New Category</h3>
-    </header>
-    <form method="POST" action="/categories">
-      <label>
-        Name
-        <input type="text" name="name" placeholder="Work, Personal, etc." required autofocus />
-      </label>
-
-      <label>
-        Color
-        <input type="color" name="color" value="#3b82f6" />
-        <small>Pick a color for this category</small>
-      </label>
-
-      <label>
-        Icon (optional)
-        <input type="text" name="icon" placeholder="📁 or 💼" maxlength="2" />
-        <small>Enter an emoji (optional)</small>
-      </label>
-
-      <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1rem;">
-        <button type="button" class="secondary" onclick="document.getElementById('modal').close(); window.location.reload();">
-          Cancel
-        </button>
-        <button type="submit">
-          Create Category
-        </button>
+<div class="modal fade" id="category-modal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="categoryModalLabel">
+          <i class="bi bi-folder-plus"></i> New Category
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-    </form>
-  </article>
-</dialog>
+      <form method="POST" action="/categories">
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="name" class="form-label">Name</label>
+            <input type="text" class="form-control" id="name" name="name" placeholder="Work, Personal, etc." required autofocus />
+          </div>
 
-<style>
-  dialog[open] {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
+          <div class="mb-3">
+            <label for="color" class="form-label">Color</label>
+            <input type="color" class="form-control form-control-color" id="color" name="color" value="#3b82f6" />
+            <small class="form-text text-muted">Pick a color for this category</small>
+          </div>
 
-  dialog::backdrop {
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-</style>
+          <div class="mb-3">
+            <label for="icon" class="form-label">Icon (optional)</label>
+            <input type="text" class="form-control" id="icon" name="icon" placeholder="📁 or 💼" maxlength="2" />
+            <small class="form-text text-muted">Enter an emoji (optional)</small>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> Create Category
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    const modalEl = document.getElementById('category-modal');
+    const modal = new bootstrap.Modal(modalEl);
+    modal.show();
+
+    // Reload page when modal is hidden
+    modalEl.addEventListener('hidden.bs.modal', function () {
+      window.location.reload();
+    });
+  })();
+</script>
 {{end}}

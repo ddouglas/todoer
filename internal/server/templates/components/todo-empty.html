@@ -1,14 +1,20 @@
 {{define "component.todo.empty"}}
-<article id="empty-state">
-  <p>No Todos yet. Create one above!</p>
-</article>
+<div id="empty-state" class="text-center py-5">
+  <div class="text-muted">
+    <i class="bi bi-inbox" style="font-size: 4rem;"></i>
+    <p class="mt-3 fs-5">No todos yet. Create one to get started!</p>
+  </div>
+</div>
 {{end}}
 
 {{define "component.todo.empty-oob"}}
 <div hx-swap-oob="afterend:#todos-list">
-  <article id="empty-state">
-    <p>No Todos yet. Create one above!</p>
-  </article>
+  <div id="empty-state" class="text-center py-5">
+    <div class="text-muted">
+      <i class="bi bi-inbox" style="font-size: 4rem;"></i>
+      <p class="mt-3 fs-5">No todos yet. Create one to get started!</p>
+    </div>
+  </div>
 </div>
 {{end}}
 

@@ -1,14 +1,25 @@
 {{define "component.nav"}}
-<header class="container">
-  <nav>
-    <strong>Todoer</strong>
-    <ul>
-      {{if .User}}
-      <li><a href="#">{{.User.Name}}</a></li>
-      {{else}}
-        <li><a href="#">Sign In</a></li>
-        {{end}}
-    </ul>
-  </nav>
-</header>
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="/">
+      <i class="bi bi-check2-square"></i> Todoer
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        {{if .User}}
+        <li class="nav-item">
+          <a class="nav-link" href="#"><i class="bi bi-person-circle"></i> {{.User.Name}}</a>
+        </li>
+        {{else}}
+          <li class="nav-item">
+            <a class="nav-link" href="#"><i class="bi bi-box-arrow-in-right"></i> Sign In</a>
+          </li>
+          {{end}}
+      </ul>
+    </div>
+  </div>
+</nav>
 {{end}}

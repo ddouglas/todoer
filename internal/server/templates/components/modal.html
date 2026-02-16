@@ -1,46 +1,30 @@
 {{define "component.modal.todo-detail"}}
-<dialog id="todo-modal" open
-  style="display: flex; align-items: center; justify-content: center; position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; background: rgba(0, 0, 0, 0.5); border: none; padding: 0; margin: 0; max-width: 100%; max-height: 100%;">
-  <article
-    style="max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; background: var(--pico-background-color); padding: 2rem; border-radius: 8px; position: relative; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-    <header style="margin-bottom: 1rem; display: flex; justify-content: space-between; align-items: center;">
-      <h3 style="margin: 0;">{{if .IsNew}}Create New Todo
-        {{else}}Edit Todo{{end}}
-      </h3>
-      <button type="button" class="close" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; padding: 0; line-height: 1;"
-        onclick="document.getElementById('todo-modal').remove(); return false;">
-        ×
-      </button>
-    </header>
-    <div id="modal-body">
-      {{template "component.todo.detail-form" .}}
+<div class="modal fade" id="todo-modal" tabindex="-1" aria-labelledby="todoModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="todoModalLabel">
+          {{if .IsNew}}<i class="bi bi-plus-circle"></i> Create New Todo
+          {{else}}<i class="bi bi-pencil"></i> Edit Todo{{end}}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        {{template "component.todo.detail-form" .}}
+      </div>
     </div>
-  </article>
-</dialog>
+  </div>
+</div>
 
 <script>
   (function () {
-    const modal = document.getElementById('todo-modal');
+    const modalEl = document.getElementById('todo-modal');
+    const modal = new bootstrap.Modal(modalEl);
+    modal.show();
 
-    // Close modal on backdrop click
-    modal.addEventListener('click', function (e) {
-      if (e.target === modal) {
-        modal.remove();
-      }
-    });
-
-    // Close modal on escape key
-    const escapeHandler = function (e) {
-      if (e.key === 'Escape') {
-        modal.remove();
-        document.removeEventListener('keydown', escapeHandler);
-      }
-    };
-    document.addEventListener('keydown', escapeHandler);
-
-    // Clean up on remove
-    modal.addEventListener('close', function () {
-      modal.remove();
+    // Clean up modal element when hidden
+    modalEl.addEventListener('hidden.bs.modal', function () {
+      modalEl.remove();
     });
   })();
 </script>
