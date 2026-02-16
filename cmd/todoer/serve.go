@@ -47,8 +47,9 @@ func serve(cCtx *cli.Context) error {
 
 	todoStore := store.NewTodoRepository(pool)
 	categoryStore := store.NewCategoryRepository(pool)
+	nagStore := store.NewNagRepository(pool)
 
-	srv := server.New(8080, logger, todoStore, categoryStore)
+	srv := server.New(8080, logger, todoStore, categoryStore, nagStore)
 
 	go func() {
 		logger.WithField("port", 8080).Info("listening")

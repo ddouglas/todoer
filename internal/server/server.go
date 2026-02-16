@@ -24,6 +24,7 @@ type Service struct {
 
 	todos      *store.TodoRepository
 	categories *store.CategoryRepository
+	nags       *store.NagRepository
 
 	templates *template.Template
 	server    *http.Server
@@ -37,6 +38,7 @@ func New(
 
 	todos *store.TodoRepository,
 	categories *store.CategoryRepository,
+	nags *store.NagRepository,
 ) *Service {
 
 	mux := flow.New()
@@ -47,6 +49,7 @@ func New(
 
 		todos:      todos,
 		categories: categories,
+		nags:       nags,
 
 		server: &http.Server{
 			Addr:              fmt.Sprintf(":%d", port),
@@ -79,7 +82,7 @@ func (s *Service) buildRouter(r *flow.Mux) {
 
 	// Home & List
 	r.HandleFunc("/", s.handleHome, http.MethodGet)
-	
+
 	// Todo CRUD
 	r.HandleFunc("/todos", s.handlePostTodo, http.MethodPost)
 	r.HandleFunc("/todos/new", s.handleNewTodoPage, http.MethodGet)
@@ -89,7 +92,7 @@ func (s *Service) buildRouter(r *flow.Mux) {
 	r.HandleFunc("/todos/:id", s.handlePatchTodo, http.MethodPatch)
 	r.HandleFunc("/todos/:id", s.handleDeleteTodo, http.MethodDelete)
 	r.HandleFunc("/todos/:id/modal", s.handleEditTodoModal, http.MethodGet)
-	
+
 	// Categories
 	r.HandleFunc("/categories", s.handleGetCategories, http.MethodGet)
 	r.HandleFunc("/categories", s.handlePostCategory, http.MethodPost)
