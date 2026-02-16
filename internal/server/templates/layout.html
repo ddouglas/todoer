@@ -7,14 +7,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Todoer</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+    <style>
+      body {
+        padding: 0;
+        margin: 0;
+      }
 
+      .app-container {
+        display: flex;
+        min-height: 100vh;
+        flex-direction: column;
+      }
+
+      .content-wrapper {
+        display: flex;
+        flex: 1;
+      }
+
+      main.container {
+        flex: 1;
+        padding: 2rem;
+        max-width: 100%;
+      }
+    </style>
   </head>
 
   <body>
-    {{template "component.nav" .}}
-    <main class="container">
-      {{block "page-content" .}}{{end}}
-    </main>
+    <div class="app-container">
+      {{template "component.nav" .}}
+      <div class="content-wrapper">
+        {{block "sidebar" .}}{{end}}
+        <main class="container">
+          {{block "page-content" .}}{{end}}
+        </main>
+      </div>
+    </div>
+
+    <!-- Modal Container -->
+    <div id="modal-container"></div>
+
     <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js"></script>
   </body>
 

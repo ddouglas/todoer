@@ -22,7 +22,8 @@ type Service struct {
 	port   uint
 	logger *logrus.Logger
 
-	todos *store.TodoRepository
+	todos      *store.TodoRepository
+	categories *store.CategoryRepository
 
 	templates *template.Template
 	server    *http.Server
@@ -35,6 +36,7 @@ func New(
 	logger *logrus.Logger,
 
 	todos *store.TodoRepository,
+	categories *store.CategoryRepository,
 ) *Service {
 
 	mux := flow.New()
@@ -43,7 +45,8 @@ func New(
 		port:   port,
 		logger: logger,
 
-		todos: todos,
+		todos:      todos,
+		categories: categories,
 
 		server: &http.Server{
 			Addr:              fmt.Sprintf(":%d", port),
@@ -74,10 +77,25 @@ func (s *Service) buildRouter(r *flow.Mux) {
 
 	r.Use(s.LoggingMiddleware)
 
+	// Home & List
 	r.HandleFunc("/", s.handleHome, http.MethodGet)
+	
+	// Todo CRUD
 	r.HandleFunc("/todos", s.handlePostTodo, http.MethodPost)
+	r.HandleFunc("/todos/new", s.handleNewTodoPage, http.MethodGet)
+	r.HandleFunc("/todos/new/modal", s.handleNewTodoModal, http.MethodGet)
+	r.HandleFunc("/todos/:id", s.handleGetTodo, http.MethodGet)
+	r.HandleFunc("/todos/:id", s.handlePutTodo, http.MethodPut)
 	r.HandleFunc("/todos/:id", s.handlePatchTodo, http.MethodPatch)
 	r.HandleFunc("/todos/:id", s.handleDeleteTodo, http.MethodDelete)
+	r.HandleFunc("/todos/:id/modal", s.handleEditTodoModal, http.MethodGet)
+	
+	// Categories
+	r.HandleFunc("/categories", s.handleGetCategories, http.MethodGet)
+	r.HandleFunc("/categories", s.handlePostCategory, http.MethodPost)
+	r.HandleFunc("/categories/new", s.handleNewCategoryModal, http.MethodGet)
+	r.HandleFunc("/categories/:id", s.handlePutCategory, http.MethodPut)
+	r.HandleFunc("/categories/:id", s.handleDeleteCategory, http.MethodDelete)
 
 }
 

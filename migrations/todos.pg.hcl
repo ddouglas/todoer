@@ -13,8 +13,8 @@ table "categories" {
   }
 
   column "color" {
-    type = text
-    null = false
+    type    = text
+    null    = false
     default = "#3b82f6"
   }
 
@@ -100,22 +100,22 @@ table "todos" {
     columns = [column.id]
   }
 
-  foreign_key {
+  foreign_key "fk_category" {
     columns     = [column.category_id]
     ref_columns = [table.categories.column.id]
     on_delete   = SET_NULL
     on_update   = CASCADE
   }
 
-  index {
+  index "idx_category_id" {
     columns = [column.category_id]
   }
 
-  index {
+  index "idx_due_date" {
     columns = [column.due_date]
   }
 
-  index {
+  index "idx_completed" {
     columns = [column.completed]
   }
 }

@@ -1,0 +1,50 @@
+{{define "component.modal.category-form"}}
+<dialog id="modal" open>
+  <article style="max-width: 500px;">
+    <header>
+      <a href="#close" aria-label="Close" class="close" onclick="document.getElementById('modal').close(); window.location.reload(); return false;">
+      </a>
+      <h3>New Category</h3>
+    </header>
+    <form method="POST" action="/categories">
+      <label>
+        Name
+        <input type="text" name="name" placeholder="Work, Personal, etc." required autofocus />
+      </label>
+
+      <label>
+        Color
+        <input type="color" name="color" value="#3b82f6" />
+        <small>Pick a color for this category</small>
+      </label>
+
+      <label>
+        Icon (optional)
+        <input type="text" name="icon" placeholder="📁 or 💼" maxlength="2" />
+        <small>Enter an emoji (optional)</small>
+      </label>
+
+      <div style="display: flex; gap: 1rem; justify-content: flex-end; margin-top: 1rem;">
+        <button type="button" class="secondary" onclick="document.getElementById('modal').close(); window.location.reload();">
+          Cancel
+        </button>
+        <button type="submit">
+          Create Category
+        </button>
+      </div>
+    </form>
+  </article>
+</dialog>
+
+<style>
+  dialog[open] {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+</style>
+{{end}}

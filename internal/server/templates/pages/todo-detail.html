@@ -1,4 +1,4 @@
-{{define "page.home"}}
+{{define "page.todo-detail"}}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -39,29 +39,13 @@
         {{template "component.sidebar" .}}
         <main class="container">
           <section>
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
-              <h1>
-                {{if .ActiveCategory}}
-                {{if .ActiveCategory.Icon}}{{.ActiveCategory.Icon}} {{end}}{{.ActiveCategory.Name}}
-                {{else if eq .SelectedFilter "today"}}
-                  📅 Today
-                  {{else if eq .SelectedFilter "week"}}
-                    📆 This Week
-                    {{else}}
-                      📋 All Todos
-                      {{end}}
-              </h1>
-              <a href="/todos/new" hx-get="/todos/new/modal" hx-target="#modal-container" hx-swap="innerHTML" role="button">
-                ➕ New Todo
-              </a>
-            </div>
             <div style="margin-bottom: 2rem;">
-              {{template "component.todo.form" .}}
+              <a href="/" style="text-decoration: none;">← Back to Todos</a>
             </div>
-            {{template "component.todo.list" .}}
-            {{if not .Todos}}
-            {{template "component.todo.empty"}}
-            {{end}}
+            <h1>{{if .IsNew}}Create New Todo
+              {{else}}Edit Todo{{end}}
+            </h1>
+            {{template "component.todo.detail-form" .}}
           </section>
         </main>
       </div>

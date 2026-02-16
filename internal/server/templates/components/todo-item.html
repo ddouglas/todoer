@@ -1,7 +1,62 @@
 {{define "component.todo.item"}}
-<li hx-target="this" hx-swap="outerHTML">
-  <input type="checkbox" name="completed" {{if .Completed}}checked{{end}} hx-patch="/todos/{{.ID}}" hx-include="this" />
-  <span>{{.Title}}</span>
-  <button hx-delete="/todos/{{.ID}}" hx-target="closest li" hx-swap="outerHTML">Delete</button>
+<li hx-target="this" hx-swap="outerHTML" style="padding: 1rem; border-bottom: 1px solid var(--pico-muted-border-color); {{if .Completed}}opacity: 0.6;{{end}}">
+  <div style="display: flex; align-items: flex-start; gap: 1rem;">
+    <!-- Checkbox -->
+    <input type="checkbox" name="completed" {{if .Completed}}checked{{end}} hx-patch="/todos/{{.ID}}" hx-include="this" style="margin-top: 0.25rem; flex-shrink: 0;" />
+
+    <!-- Main Content -->
+    <div style="flex: 1; min-width: 0;">
+      <!-- Title Row -->
+      <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+        <!-- Priority Indicator -->
+        {{if eq .Priority "high"}}
+        <span style="color: #ef4444; font-weight: bold;" title="High Priority">🔴</span>
+        {{else if eq .Priority "medium"}}
+          <span style="color: #f59e0b;" title="Medium Priority">🟡</span>
+          {{else}}
+            <span style="color: #6b7280;" title="Low Priority">⚪</span>
+            {{end}}
+
+            <!-- Title -->
+            <a href="/todos/{{.ID}}" hx-get="/todos/{{.ID}}/modal" hx-target="#modal-content" hx-swap="innerHTML"
+              style="font-weight: 500; text-decoration: none; {{if .Completed}}text-decoration: line-through;{{end}}">
+              {{.Title}}
+            </a>
+      </div>
+
+      <!-- Metadata Row -->
+      <div style="display: flex; align-items: center; gap: 1rem; font-size: 0.875rem; color: var(--pico-muted-color); flex-wrap: wrap;">
+        <!-- Category Badge -->
+        {{if .Category}}
+        <span
+          style="display: inline-flex; align-items: center; gap: 0.25rem; padding: 0.125rem 0.5rem; border-radius: 12px; background-color: {{.Category.Color}}20; color: {{.Category.Color}}; font-size: 0.75rem;">
+          <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background-color: {{.Category.Color}};"></span>
+          {{if .Category.Icon}}{{.Category.Icon}} {{end}}{{.Category.Name}}
+        </span>
+        {{end}}
+
+        <!-- Due Date -->
+        {{if .DueDate}}
+        <span title="Due date">
+          📅 {{.DueDate.Format "Jan 2, 2006"}}
+        </span>
+        {{end}}
+
+        <!-- Description Preview -->
+        {{if .Description}}
+        <span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+          {{.Description}}
+        </span>
+        {{end}}
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div style="display: flex; gap: 0.5rem; flex-shrink: 0;">
+      <button hx-delete="/todos/{{.ID}}" hx-target="closest li" hx-swap="outerHTML" hx-confirm="Are you sure you want to delete this todo?" style="padding: 0.25rem 0.5rem; font-size: 0.875rem;">
+        🗑️
+      </button>
+    </div>
+  </div>
 </li>
 {{end}}

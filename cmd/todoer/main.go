@@ -40,8 +40,9 @@ func main() {
 	}
 
 	todoStore := store.NewTodoRepository(pool)
+	categoryStore := store.NewCategoryRepository(pool)
 
-	srv := server.New(8080, logger, todoStore)
+	srv := server.New(8080, logger, todoStore, categoryStore)
 
 	go func() {
 		logger.WithField("port", 8080).Info("listening")

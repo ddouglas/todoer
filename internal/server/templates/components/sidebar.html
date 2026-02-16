@@ -18,36 +18,32 @@
           📆 This Week
         </a>
       </li>
-      
+
       <!-- Divider -->
       <li style="margin: 1rem 0; border-bottom: 1px solid var(--pico-muted-border-color);"></li>
-      
+
       <!-- Categories Header -->
       <li style="padding: 0.5rem; font-weight: bold; color: var(--pico-muted-color);">
         Categories
       </li>
-      
+
       <!-- Categories List -->
       {{if .Categories}}
-        {{range .Categories}}
-        <li>
-          <a href="/?filter=category&category={{.ID}}" 
-             class="{{if eq $.SelectedFilter .ID}}active{{end}}" 
-             style="display: flex; align-items: center; padding: 0.5rem; border-radius: 4px; text-decoration: none;">
-            <span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: {{.Color}}; margin-right: 0.5rem;"></span>
-            {{if .Icon}}{{.Icon}} {{end}}{{.Name}}
-          </a>
-        </li>
-        {{end}}
+      {{range .Categories}}
+      <li>
+        <a href="/?filter=category&category={{.ID}}" class="{{if eq $.SelectedFilter .ID}}active{{end}}"
+          style="display: flex; align-items: center; padding: 0.5rem; border-radius: 4px; text-decoration: none;">
+          <span style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: {{.Color}}; margin-right: 0.5rem;"></span>
+          {{if .Icon}}{{.Icon}} {{end}}{{.Name}}
+        </a>
+      </li>
       {{end}}
-      
+      {{end}}
+
       <!-- Add Category Button -->
       <li style="margin-top: 0.5rem;">
-        <a href="/categories/new" 
-           hx-get="/categories/new" 
-           hx-target="#modal-content" 
-           hx-swap="innerHTML"
-           style="display: block; padding: 0.5rem; border-radius: 4px; text-decoration: none; color: var(--pico-primary);">
+        <a href="/categories/new" hx-get="/categories/new" hx-target="#modal-content" hx-swap="innerHTML"
+          style="display: block; padding: 0.5rem; border-radius: 4px; text-decoration: none; color: var(--pico-primary);">
           ➕ New Category
         </a>
       </li>
@@ -61,6 +57,7 @@
     color: var(--pico-primary);
     font-weight: 500;
   }
+
   aside a:hover {
     background-color: var(--pico-secondary-background);
   }

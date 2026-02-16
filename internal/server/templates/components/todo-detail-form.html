@@ -1,0 +1,76 @@
+{{define "component.todo.detail-form"}}
+<form {{if .IsNew}} hx-post="/todos" hx-target="#todos-list" hx-swap="afterbegin"
+  hx-on::after-request="if(event.detail.successful) { const modal = document.getElementById('todo-modal'); if(modal) modal.remove(); }" {{else}} hx-put="/todos/{{.Todo.ID}}"
+  hx-target="#todo-{{.Todo.ID}}" hx-swap="outerHTML" hx-on::after-request="if(event.detail.successful) { const modal = document.getElementById('todo-modal'); if(modal) modal.remove(); }" {{end}}
+  style="display: flex; flex-direction: column; gap: 1rem;">
+
+  <!-- Title -->
+  <label>
+    Title
+    <input type="text" name="title" value="{{if .Todo}}{{.Todo.Title}}{{end}}" placeholder="What needs to be done?" required autofocus />
+  </label>
+
+  <!-- Description -->
+  <label>
+    Description
+    <textarea name="description" rows="4" placeholder="Add more details...">{{if .Todo}}{{if .Todo.Description}}{{.Todo.Description}}{{end}}{{end}}</textarea>
+  </label>
+
+  <!-- Category -->
+  <label>
+    Category
+    <select name="category_id">
+      <option value="">No Category</option>
+      {{range .Categories}}
+      <option value="{{.ID}}" {{if $.Todo}}{{if $.Todo.CategoryID}}{{if eq $.Todo.CategoryID .ID}}selected{{end}}{{end}}{{end}}>
+        {{if .Icon}}{{.Icon}} {{end}}{{.Name}}
+      </option>
+      {{end}}
+    </select>
+  </label>
+
+  <!-- Priority & Due Date Row -->
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+    <!-- Priority -->
+    <label>
+      Priority
+      <select name="priority">
+        <option value="low" {{if .Todo}}{{if eq .Todo.Priority "low"}}selected{{end}}{{end}}>Low</option>
+        <option value="medium" {{if .Todo}}{{if eq .Todo.Priority "medium"}}selected{{end}}{{end}}>Medium</option>
+        <option value="high" {{if .Todo}}{{if eq .Todo.Priority "high"}}selected{{end}}{{end}}>High</option>
+      </select>
+    </label>
+
+    <!-- Due Date -->
+    <label>
+      Due Date
+      <input type="date" name="due_date" value="{{if .Todo}}{{if .Todo.DueDate}}{{.Todo.DueDate.Format "2006-01-02"}}{{end}}{{end}}" />
+    </label>
+  </div>
+
+  <!-- Reminder -->
+  <label>
+    Reminder
+    <input type="datetime-local" name="reminder_at" value="{{if .Todo}}{{if .Todo.ReminderAt}}{{.Todo.ReminderAt.Format "2006-01-02T15:04"}}{{end}}{{end}}" />
+  </label>
+
+  <!-- Completed (only show for edit) -->
+  {{if not .IsNew}}
+  <label>
+    <input type="checkbox" name="completed" {{if .Todo.Completed}}checked{{end}} />
+    Mark as completed
+  </label>
+  {{end}}
+
+  <!-- Actions -->
+  <div style="display: flex; gap: 1rem; justify-content: flex-end;">
+    <button type="button" onclick="const modal = document.getElementById('todo-modal'); if(modal) { modal.remove(); } else { window.history.back(); }" class="secondary">
+      Cancel
+    </button>
+    <button type="submit">
+      {{if .IsNew}}Create Todo
+      {{else}}Save Changes{{end}}
+    </button>
+  </div>
+</form>
+{{end}}
