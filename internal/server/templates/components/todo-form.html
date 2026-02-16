@@ -1,0 +1,6 @@
+{{define "component.todo.form"}}
+<form hx-post="/todos" hx-target="#todos-list" hx-swap="beforeend">
+  <input type="text" name="title" placeholder="Add a new todo..." required />
+  <button type="submit">Add</button>
+</form>
+{{end}}

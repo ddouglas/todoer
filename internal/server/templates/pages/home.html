@@ -1,0 +1,18 @@
+{{define "page.home"}}
+{{template "layout.base" .}}
+{{end}}
+
+{{define "page-content"}}
+<section>
+  <h1>My Todos</h1>
+
+  {{template "component.todo.form" .}}
+
+  {{template "component.todo.list" .}}
+
+  {{if not .Todos}}
+  {{template "component.todo.empty"}}
+  {{end}}
+
+</section>
+{{end}}

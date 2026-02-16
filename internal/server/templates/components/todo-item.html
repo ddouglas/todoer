@@ -1,0 +1,7 @@
+{{define "component.todo.item"}}
+<li hx-target="this" hx-swap="outerHTML">
+  <input type="checkbox" name="completed" {{if .Completed}}checked{{end}} hx-patch="/todos/{{.ID}}" hx-include="this" />
+  <span>{{.Title}}</span>
+  <button hx-delete="/todos/{{.ID}}" hx-target="closest li" hx-swap="outerHTML">Delete</button>
+</li>
+{{end}}

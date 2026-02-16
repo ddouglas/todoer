@@ -1,0 +1,7 @@
+{{define "component.todo.list"}}
+<ul id="todos-list">
+  {{range .Todos}}
+  {{template "component.todo.item" .}}
+  {{end}}
+</ul>
+{{end}}

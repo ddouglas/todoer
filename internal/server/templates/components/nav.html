@@ -1,0 +1,14 @@
+{{define "component.nav"}}
+<header class="container">
+  <nav>
+    <strong>Todoer</strong>
+    <ul>
+      {{if .User}}
+      <li><a href="#">{{.User.Name}}</a></li>
+      {{else}}
+        <li><a href="#">Sign In</a></li>
+        {{end}}
+    </ul>
+  </nav>
+</header>
+{{end}}

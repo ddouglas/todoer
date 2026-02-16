@@ -1,0 +1,17 @@
+{{define "component.todo.empty"}}
+<article id="empty-state">
+  <p>No Todos yet. Create one above!</p>
+</article>
+{{end}}
+
+{{define "component.todo.empty-oob"}}
+<div hx-swap-oob="afterend:#todos-list">
+  <article id="empty-state">
+    <p>No Todos yet. Create one above!</p>
+  </article>
+</div>
+{{end}}
+
+{{define "component.todo.empty-delete"}}
+<div id="empty-state" hx-swap-oob="delete"></div>
+{{end}}
