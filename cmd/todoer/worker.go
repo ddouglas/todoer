@@ -117,7 +117,7 @@ func processNags(ctx context.Context, logger *logrus.Logger, nagStore *store.Nag
 		}
 		nag.Todo = todo
 
-		err = sendNagNotification(ctx, logger, ntfyClient, nag)
+		err = sendNagNotification(ctx, ntfyClient, nag)
 		if err != nil {
 			logger.WithError(err).WithField("todo_id", nag.TodoID).Error("failed to send nag notification")
 			continue
@@ -138,7 +138,7 @@ func processNags(ctx context.Context, logger *logrus.Logger, nagStore *store.Nag
 	}
 }
 
-func sendNagNotification(ctx context.Context, logger *logrus.Logger, ntfyClient *notify.NTFYClient, nag *types.NagSettings) error {
+func sendNagNotification(ctx context.Context, ntfyClient *notify.NTFYClient, nag *types.NagSettings) error {
 	if nag.Todo == nil {
 		return fmt.Errorf("nag has no associated todo")
 	}
@@ -150,11 +150,12 @@ func sendNagNotification(ctx context.Context, logger *logrus.Logger, ntfyClient 
 	priority := 3 // default
 	tags := []string{"alarm_clock"}
 
-	if nag.Todo.Priority == types.PriorityHigh {
+	switch nag.Todo.Priority {
+	case types.PriorityHigh:
 		priority = 5
 		tags = append(tags, "fire")
 		title = "🔥 Urgent Todo Reminder"
-	} else if nag.Todo.Priority == types.PriorityMedium {
+	case types.PriorityMedium:
 		priority = 4
 	}
 
