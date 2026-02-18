@@ -81,7 +81,8 @@
       <div class="card card-body">
         <!-- Enable Nagging -->
         <div class="mb-3 form-check">
-          <input type="checkbox" class="form-check-input" id="nag_enabled" name="nag_enabled" value="true" {{if .Todo}}{{if .Todo.NagSettings}}{{if .Todo.NagSettings.Enabled}}checked{{end}}{{end}}{{end}} />
+          <input type="checkbox" class="form-check-input" id="nag_enabled" name="nag_enabled" value="true"
+            {{if .Todo}}{{if .Todo.NagSettings}}{{if .Todo.NagSettings.Enabled}}checked{{end}}{{end}}{{end}} />
           <label class="form-check-label" for="nag_enabled">
             Enable nagging reminders
           </label>
@@ -91,14 +92,16 @@
         <!-- Nag Interval -->
         <div class="mb-3">
           <label for="nag_interval" class="form-label">Nag every (minutes)</label>
-          <input type="number" class="form-control" id="nag_interval" name="nag_interval" min="1" max="1440" value="{{if .Todo}}{{if .Todo.NagSettings}}{{.Todo.NagSettings.IntervalMinutes}}{{else}}10{{end}}{{else}}10{{end}}" />
+          <input type="number" class="form-control" id="nag_interval" name="nag_interval" min="1" max="1440"
+            value="{{if .Todo}}{{if .Todo.NagSettings}}{{.Todo.NagSettings.IntervalMinutes}}{{else}}10{{end}}{{else}}10{{end}}" />
           <div class="form-text">How often to send reminder notifications</div>
         </div>
 
         <!-- Nag Duration -->
         <div class="mb-3">
           <label for="nag_duration" class="form-label">Nag for (minutes)</label>
-          <input type="number" class="form-control" id="nag_duration" name="nag_duration" min="1" max="10080" value="{{if .Todo}}{{if .Todo.NagSettings}}{{.Todo.NagSettings.DurationMinutes}}{{else}}60{{end}}{{else}}60{{end}}" />
+          <input type="number" class="form-control" id="nag_duration" name="nag_duration" min="1" max="10080"
+            value="{{if .Todo}}{{if .Todo.NagSettings}}{{.Todo.NagSettings.DurationMinutes}}{{else}}60{{end}}{{else}}60{{end}}" />
           <div class="form-text">Total duration to keep nagging (starting from due date)</div>
         </div>
       </div>

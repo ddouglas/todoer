@@ -3,9 +3,6 @@ package main
 import (
 	"context"
 	"fmt"
-	"os"
-	"os/signal"
-	"syscall"
 	"time"
 
 	"github.com/ddouglas/todoer/internal/notify"
@@ -18,7 +15,7 @@ import (
 
 var workerCommand = &cli.Command{
 	Name:  "worker",
-	Usage: "Run the notification worker to send nag reminders",
+	Usage: "Run the notification worker to send nag reminders (designed for cron)",
 	Flags: []cli.Flag{
 		&cli.StringFlag{
 			Name:    "config",
@@ -27,19 +24,12 @@ var workerCommand = &cli.Command{
 			EnvVars: []string{"TODOER_CONFIG"},
 			Value:   "config.yml",
 		},
-		&cli.DurationFlag{
-			Name:    "interval",
-			Aliases: []string{"i"},
-			Usage:   "How often to check for nags",
-			Value:   time.Minute,
-		},
 	},
 	Action: runWorker,
 }
 
 func runWorker(cCtx *cli.Context) error {
-	ctx, cancel := context.WithCancel(context.Background())
-	defer cancel()
+	ctx := context.Background()
 
 	logger := logrus.New()
 	logger.SetLevel(logrus.InfoLevel)
@@ -74,35 +64,15 @@ func runWorker(cCtx *cli.Context) error {
 	ntfyClient := notify.NewNTFYClient(c.NTFY.URL, c.NTFY.Topic)
 
 	logger.WithFields(logrus.Fields{
-		"interval":   cCtx.Duration("interval"),
 		"ntfy_url":   c.NTFY.URL,
 		"ntfy_topic": c.NTFY.Topic,
-	}).Info("starting notification worker")
+	}).Info("running notification worker")
 
-	// Setup signal handling
-	sigChan := make(chan os.Signal, 1)
-	signal.Notify(sigChan, os.Interrupt, syscall.SIGTERM)
-
-	// Create ticker
-	ticker := time.NewTicker(cCtx.Duration("interval"))
-	defer ticker.Stop()
-
-	// Run immediately on start
+	// Process nags once and exit
 	processNags(ctx, logger, nagStore, todoStore, ntfyClient)
 
-	// Main loop
-	for {
-		select {
-		case <-ticker.C:
-			processNags(ctx, logger, nagStore, todoStore, ntfyClient)
-		case sig := <-sigChan:
-			logger.WithField("signal", sig).Info("received shutdown signal")
-			return nil
-		case <-ctx.Done():
-			logger.Info("context cancelled, shutting down")
-			return nil
-		}
-	}
+	logger.Info("worker completed")
+	return nil
 }
 
 func processNags(ctx context.Context, logger *logrus.Logger, nagStore *store.NagRepository, todoStore *store.TodoRepository, ntfyClient *notify.NTFYClient) {
