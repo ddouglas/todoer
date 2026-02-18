@@ -1,10 +1,15 @@
 {{define "component.todo.item"}}
 <div class="todo-item" id="todo-{{.ID}}" hx-target="this" hx-swap="outerHTML">
   <div class="card border-0 shadow-sm {{if .Completed}}opacity-50{{end}}">
-    <div class="card-body">
+    <div 
+      class="card-body" 
+      style="cursor: pointer;"
+      hx-get="/todos/{{.ID}}/modal" 
+      hx-target="#modal-container" 
+      hx-swap="innerHTML">
       <div class="d-flex align-items-start gap-3">
         <!-- Checkbox -->
-        <div class="form-check">
+        <div class="form-check" onclick="event.stopPropagation()">
           <input class="form-check-input" type="checkbox" name="completed" {{if .Completed}}checked{{end}} hx-patch="/todos/{{.ID}}" hx-include="this" style="cursor: pointer; margin-top: 0.15rem;" />
         </div>
 
@@ -22,10 +27,9 @@
                 {{end}}
 
                 <!-- Title -->
-                <a href="/todos/{{.ID}}" hx-get="/todos/{{.ID}}/modal" hx-target="#modal-container" hx-swap="innerHTML"
-                  class="text-decoration-none text-dark fw-semibold {{if .Completed}}text-decoration-line-through{{end}}">
+                <span class="fw-semibold {{if .Completed}}text-decoration-line-through{{end}}">
                   {{.Title}}
-                </a>
+                </span>
           </div>
 
           <!-- Metadata Row -->
@@ -54,7 +58,7 @@
         </div>
 
         <!-- Actions -->
-        <div class="d-flex gap-2">
+        <div class="d-flex gap-2" onclick="event.stopPropagation()">
           <button class="btn btn-sm btn-outline-danger" hx-delete="/todos/{{.ID}}" hx-target="closest .todo-item" hx-swap="outerHTML" hx-confirm="Are you sure you want to delete this todo?">
             <i class="bi bi-trash"></i>
           </button>
