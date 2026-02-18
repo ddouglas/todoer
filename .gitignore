@@ -1,1 +1,3 @@
 bin/*
+# Configuration files (may contain secrets)
+config.yml
