@@ -1,16 +1,12 @@
 {{define "component.todo.item"}}
 <div class="todo-item" id="todo-{{.ID}}" hx-target="this" hx-swap="outerHTML">
   <div class="card border-0 shadow-sm {{if .Completed}}opacity-50{{end}}">
-    <div 
-      class="card-body" 
-      style="cursor: pointer;"
-      hx-get="/todos/{{.ID}}/modal" 
-      hx-target="#modal-container" 
-      hx-swap="innerHTML">
+    <div class="card-body" style="cursor: pointer;" hx-get="/todos/{{.ID}}/modal" hx-target="#modal-container" hx-swap="innerHTML">
       <div class="d-flex align-items-start gap-3">
         <!-- Checkbox -->
         <div class="form-check" onclick="event.stopPropagation()">
-          <input class="form-check-input" type="checkbox" name="completed" {{if .Completed}}checked{{end}} hx-patch="/todos/{{.ID}}" hx-target="#todo-{{.ID}}" hx-swap="outerHTML" hx-include="this" style="cursor: pointer; margin-top: 0.15rem;" />
+          <input class="form-check-input" type="checkbox" name="completed" {{if .Completed}}checked{{end}} hx-patch="/todos/{{.ID}}" hx-target="#todo-{{.ID}}" hx-swap="outerHTML" hx-include="this"
+            style="cursor: pointer; margin-top: 0.15rem;" />
         </div>
 
         <!-- Main Content -->

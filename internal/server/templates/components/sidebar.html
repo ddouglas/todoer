@@ -27,15 +27,8 @@
           <span class="badge rounded-circle me-2" style="background-color: {{.Color}}; width: 12px; height: 12px; padding: 0;"></span>
           {{if .Icon}}<span class="me-1">{{.Icon}}</span>{{end}} {{.Name}}
         </a>
-        <button 
-          class="btn btn-sm btn-link text-danger p-2" 
-          hx-delete="/categories/{{.ID}}" 
-          hx-confirm="Are you sure you want to delete this category?"
-          hx-target="body"
-          hx-swap="none"
-          hx-on::after-request="window.location.reload()"
-          title="Delete category"
-          style="border: none; background: none;">
+        <button class="btn btn-sm btn-link text-danger p-2" hx-delete="/categories/{{.ID}}" hx-confirm="Are you sure you want to delete this category?" hx-target="body" hx-swap="none"
+          hx-on::after-request="window.location.reload()" title="Delete category" style="border: none; background: none;">
           <i class="bi bi-trash"></i>
         </button>
       </div>
