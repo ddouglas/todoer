@@ -15,7 +15,7 @@ database:
   # database: todoer
   # sslmode: disable
 
-# Notification settings (for future use)
-# notifications:
-#   ntfy_url: https://ntfy.sh
-#   ntfy_topic: your-topic-name
+# NTFY notification settings
+ntfy:
+  url: https://ntfy.sh
+  topic: todoer-notifications  # Change this to your own topic

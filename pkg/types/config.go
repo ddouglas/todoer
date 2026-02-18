@@ -11,6 +11,12 @@ type Config struct {
 	Port        uint   `yaml:"port" envconfig:"PORT"`
 
 	Database DatabaseConfig `yaml:"database"`
+	NTFY     NTFYConfig     `yaml:"ntfy"`
+}
+
+type NTFYConfig struct {
+	URL   string `yaml:"url" envconfig:"NTFY_URL"`
+	Topic string `yaml:"topic" envconfig:"NTFY_TOPIC"`
 }
 
 type DatabaseConfig struct {

@@ -86,6 +86,40 @@ func (r *TodoRepository) Todos(ctx context.Context) ([]*types.Todo, error) {
 
 }
 
+func (r *TodoRepository) TodosByIDs(ctx context.Context, ids []string) ([]*types.Todo, error) {
+	if len(ids) == 0 {
+		return []*types.Todo{}, nil
+	}
+
+	query, args, err := psql().
+		Select(todoTableColumns...).
+		From(todoTableName).
+		Where(sq.Eq{"id": ids}).
+		ToSql()
+	if err != nil {
+		return nil, fmt.Errorf("failed to generate query: %w", err)
+	}
+
+	var todos = make([]*types.Todo, 0)
+
+	err = pgxscan.Select(ctx, r.pool, &todos, query, args...)
+	if err != nil {
+		return nil, err
+	}
+
+	// Load categories for all todos
+	for _, todo := range todos {
+		if todo.CategoryID != nil {
+			category, err := r.loadCategory(ctx, *todo.CategoryID)
+			if err == nil {
+				todo.Category = category
+			}
+		}
+	}
+
+	return todos, nil
+}
+
 func (r *TodoRepository) TodosByFilter(ctx context.Context, filter string, categoryID *string) ([]*types.Todo, error) {
 	builder := psql().
 		Select(todoTableColumns...).

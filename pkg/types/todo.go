@@ -38,6 +38,9 @@ type NagSettings struct {
 	LastNaggedAt    *time.Time `db:"last_nagged_at"`
 	CreatedAt       time.Time  `db:"created_at"`
 	UpdatedAt       time.Time  `db:"updated_at"`
+	
+	// Joined fields (not in DB)
+	Todo *Todo `db:"-"`
 }
 
 const (
