@@ -1,0 +1,22 @@
+# Todoer Configuration File
+# Copy this file to config.yml and customize for your environment
+
+# Application settings
+environment: development  # development, staging, production
+port: 8080
+
+# Database configuration
+database:
+  url: "postgres://todoer:password@localhost:5432/todoer?sslmode=disable"
+  # Or specify individual components:
+  # host: localhost
+  # port: 5432
+  # user: todoer
+  # password: password
+  # database: todoer
+  # sslmode: disable
+
+# NTFY notification settings
+ntfy:
+  url: https://ntfy.sh
+  topic: todoer-notifications  # Change this to your own unique topic
