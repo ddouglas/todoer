@@ -91,6 +91,6 @@ func (s *Service) handleDeleteCategory(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Redirect to home on success
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	// Return success - HTMX will handle the reload
+	w.WriteHeader(http.StatusOK)
 }
