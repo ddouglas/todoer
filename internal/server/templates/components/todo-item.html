@@ -10,7 +10,7 @@
       <div class="d-flex align-items-start gap-3">
         <!-- Checkbox -->
         <div class="form-check" onclick="event.stopPropagation()">
-          <input class="form-check-input" type="checkbox" name="completed" {{if .Completed}}checked{{end}} hx-patch="/todos/{{.ID}}" hx-include="this" style="cursor: pointer; margin-top: 0.15rem;" />
+          <input class="form-check-input" type="checkbox" name="completed" {{if .Completed}}checked{{end}} hx-patch="/todos/{{.ID}}" hx-target="#todo-{{.ID}}" hx-swap="outerHTML" hx-include="this" style="cursor: pointer; margin-top: 0.15rem;" />
         </div>
 
         <!-- Main Content -->
